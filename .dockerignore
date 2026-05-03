@@ -1,0 +1,32 @@
+# Version control
+.git
+.gitignore
+
+# Python env & cache
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Data (large raw files — not needed at runtime)
+data/
+
+# Notebooks
+notebooks/
+
+# Frontend (separate service)
+frontend/
+
+# Local env files
+.env
+.env.local
+*.env
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/

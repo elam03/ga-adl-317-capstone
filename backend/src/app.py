@@ -1,6 +1,3 @@
-# This is a conceptual example for a separate deployment script (e.g., app.py)
-# You would need to install fastapi and uvicorn: pip install fastapi uvicorn
-
 import os
 import torch
 import pickle
@@ -13,9 +10,14 @@ import torch.nn as nn
 
 app = FastAPI(title="Board Game Rating Predictor")
 
+# Support multiple origins via a comma-separated ALLOWED_ORIGINS env var.
+# Falls back to localhost for local development.
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000")
+ALLOWED_ORIGINS = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
