@@ -34,24 +34,31 @@ def process_csv(input_path, output_path, limit=None):
         writer.writeheader()
         
         count = 0
+        
+        def clean_val(val):
+            if not isinstance(val, str):
+                return val
+            # Strip NUL bytes, EOF chars, and newlines that break pandas C parser
+            return val.replace('\0', '').replace('\x1a', '').replace('\r', ' ').replace('\n', ' ')
+
         for row in reader:
             if limit is not None and count >= limit:
                 break
             count += 1
             processed_row = {
-                "id": row.get("id"),
-                "name": row.get("name"),
-                "description": row.get("description"),
-                "boardgamecategory": row.get("boardgamecategory"),
-                "boardgamemechanic": row.get("boardgamemechanic"),
-                "boardgamedesigner": row.get("boardgamedesigner"),
-                "usersrated": row.get("usersrated"),
-                "rating": row.get("average"),
-                "bayes_rating": row.get("bayesaverage"),
-                "num_comments": row.get("numcomments"),
-                "playtime": row.get("playingtime"),
-                "min_playtime": row.get("minplaytime"),
-                "max_playtime": row.get("maxplaytime")
+                "id": clean_val(row.get("id")),
+                "name": clean_val(row.get("name")),
+                "description": clean_val(row.get("description")),
+                "boardgamecategory": clean_val(row.get("boardgamecategory")),
+                "boardgamemechanic": clean_val(row.get("boardgamemechanic")),
+                "boardgamedesigner": clean_val(row.get("boardgamedesigner")),
+                "usersrated": clean_val(row.get("usersrated")),
+                "rating": clean_val(row.get("average")),
+                "bayes_rating": clean_val(row.get("bayesaverage")),
+                "num_comments": clean_val(row.get("numcomments")),
+                "playtime": clean_val(row.get("playingtime")),
+                "min_playtime": clean_val(row.get("minplaytime")),
+                "max_playtime": clean_val(row.get("maxplaytime"))
             }
             writer.writerow(processed_row)
 
