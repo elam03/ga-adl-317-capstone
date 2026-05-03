@@ -6,11 +6,19 @@ import torch
 import pickle
 import pandas as pd
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import torch.nn as nn
 
 app = FastAPI(title="Board Game Rating Predictor")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["POST", "GET", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
 
 class DeepNet(nn.Module):
     def __init__(self, input_features, dropout_rate=0.3):
