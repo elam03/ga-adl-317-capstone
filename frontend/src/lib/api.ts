@@ -1,4 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const API_SECRET_KEY = process.env.NEXT_PUBLIC_API_SECRET_KEY ?? "";
 
 export interface PredictRequest {
   categories: string[];
@@ -14,7 +15,10 @@ export async function predictRating(
 ): Promise<PredictResponse> {
   const res = await fetch(`${API_URL}/predict`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": API_SECRET_KEY,
+    },
     body: JSON.stringify(payload),
   });
 

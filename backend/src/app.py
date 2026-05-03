@@ -2,11 +2,35 @@ import os
 import torch
 import pickle
 import pandas as pd
-from fastapi import FastAPI
+from fastapi import FastAPI, Security, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from typing import List
 import torch.nn as nn
+from dotenv import load_dotenv
+
+# Load backend-local env vars (backend/.env)
+_backend_env = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env")
+load_dotenv(_backend_env)
+
+# --- Auth ---
+_API_KEY_NAME = "X-API-Key"
+_api_key_header = APIKeyHeader(name=_API_KEY_NAME, auto_error=False)
+_API_SECRET_KEY = os.getenv("API_SECRET_KEY", "")
+
+if not _API_SECRET_KEY:
+    raise RuntimeError("API_SECRET_KEY env var is not set. Add it to backend/.env")
+
+
+def verify_api_key(api_key: str = Security(_api_key_header)) -> str:
+    """Dependency that validates the X-API-Key header."""
+    if not api_key or api_key != _API_SECRET_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid or missing API key",
+        )
+    return api_key
 
 app = FastAPI(title="Board Game Rating Predictor")
 
@@ -19,7 +43,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_methods=["POST", "GET", "OPTIONS"],
-    allow_headers=["Content-Type"],
+    allow_headers=["Content-Type", "X-API-Key"],
 )
 
 class DeepNet(nn.Module):
@@ -83,7 +107,7 @@ class GameInput(BaseModel):
     mechanics: List[str]
 
 @app.post("/predict")
-def predict_rating(game: GameInput):
+def predict_rating(game: GameInput, _: str = Security(verify_api_key)):
     # Re-use the logic from our predict_with_mechanics function
     sample_series = pd.Series(0.0, index=feature_names)
     
