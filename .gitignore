@@ -2,6 +2,5 @@
 .env
 
 data/raw
-data/processed
 
 __pycache__/
