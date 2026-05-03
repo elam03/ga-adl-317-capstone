@@ -19,10 +19,3 @@ Kaggle: https://www.kaggle.com/datasets/jvanelteren/boardgamegeek-reviews/data
 ## MVP
 
 [Link to live demo or instructions to run locally]
-
-## Setup Instructions
-
-```bash
-pip install -r requirements.txt
-python app.py
-```
