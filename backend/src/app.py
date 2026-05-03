@@ -46,9 +46,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 MODELS_DIR = os.path.join(BASE_DIR, 'models')
 
 # 1. Load Preprocessing Assets
+import warnings
 assets_path = os.path.join(MODELS_DIR, 'preprocessing_assets.pkl')
-with open(assets_path, 'rb') as f:
-    assets = pickle.load(f)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    with open(assets_path, 'rb') as f:
+        assets = pickle.load(f)
 
 scaler = assets['scaler']
 mlb_category = assets['mlb_category']
@@ -104,4 +108,4 @@ def predict_rating(game: GameInput):
 if __name__ == "__main__":
     import uvicorn
     print("Starting FastAPI server...")
-    uvicorn.run("src.backend.app:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("backend.src.app:app", host="127.0.0.1", port=8000, reload=True)
