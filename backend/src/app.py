@@ -40,9 +40,9 @@ def predict_rating(game: GameInput, _: str = Security(verify_api_key)):
 
 
 @app.post("/rag/prepare")
-def rag_prepare(test: bool = False, _: str = Security(verify_api_key)):
-    """Clear and re-seed the vector DB from the board game CSV."""
-    result = rag.prepare_db(test=test)
+def rag_prepare(test: bool = False, clear: bool = False, _: str = Security(verify_api_key)):
+    """Seed the vector DB from the board game CSV. Set clear=True to wipe it first."""
+    result = rag.prepare_db(test=test, clear=clear)
     return {"status": "ok", **result}
 
 

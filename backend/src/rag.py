@@ -58,48 +58,98 @@ def _get_vectorstore(embedding_model: OpenAIEmbeddings) -> Chroma:
 # Public API
 # ---------------------------------------------------------------------------
 
-def prepare_db(test: bool = False) -> dict:
+def prepare_db(test: bool = False, clear: bool = False, batch_size: int = 200) -> dict:
     """
-    Clear the existing vector DB and re-seed it from the processed CSV.
+    Seed the vector DB from the processed CSV in batches.
+    
+    If `clear` is True, it will wipe the existing DB first.
+    Otherwise, it will check for already indexed game names and skip them,
+    allowing the process to resume if it was interrupted or hit an error.
 
-    Each document is the cleaned description, with 'name' stored as metadata
-    so callers can surface the game title alongside search results.
-
-    Returns a dict with the number of documents indexed.
+    Returns a dict with the number of documents indexed, skipped, and errors.
     """
     csv_path = os.path.abspath(_CSV_PATH)
     df = pd.read_csv(csv_path, usecols=["name", "description"])
     df = df.dropna(subset=["description", "name"])
 
-    if test:
-        df = df.head(100)
-
-    texts = [_clean_description(desc) for desc in df["description"]]
-    metadatas = [{"name": name} for name in df["name"]]
-
     embedding_model = _get_embedding_model()
     persist_dir = os.path.abspath(_CHROMA_PERSIST_DIR)
     os.makedirs(persist_dir, exist_ok=True)
 
-    # Delete existing collection so we start fresh on each prepare call
-    existing = Chroma(
+    vectorstore = Chroma(
         collection_name=_CHROMA_COLLECTION,
         embedding_function=embedding_model,
         persist_directory=persist_dir,
     )
-    existing.delete_collection()
 
-    # Re-create and seed
-    Chroma.from_texts(
-        texts=texts,
-        metadatas=metadatas,
-        embedding=embedding_model,
-        collection_name=_CHROMA_COLLECTION,
-        persist_directory=persist_dir,
-    )
+    if clear:
+        print("Clearing existing vector database...")
+        vectorstore.delete_collection()
+        vectorstore = Chroma(
+            collection_name=_CHROMA_COLLECTION,
+            embedding_function=embedding_model,
+            persist_directory=persist_dir,
+        )
 
-    return {"indexed": len(texts)}
+    # Get already indexed IDs to skip them
+    try:
+        existing_data = vectorstore.get()
+        existing_ids = set(existing_data["ids"])
+    except Exception:
+        existing_ids = set()
 
+    total_indexed = 0
+    total_skipped = 0
+    total_errors = 0
+    chunks_processed = 0
+
+    print(f"Found {len(existing_ids)} items already in the DB.")
+
+    # Process in batches
+    for i in range(0, len(df), batch_size):
+        batch_df = df.iloc[i:i+batch_size]
+        
+        batch_texts = []
+        batch_metadatas = []
+        batch_ids = []
+        
+        for _, row in batch_df.iterrows():
+            # Use the game name as the unique ID
+            doc_id = str(row["name"]).strip()
+            if doc_id in existing_ids:
+                total_skipped += 1
+                continue
+                
+            batch_texts.append(_clean_description(row["description"]))
+            batch_metadatas.append({"name": row["name"]})
+            batch_ids.append(doc_id)
+            
+        if not batch_texts:
+            continue
+            
+        try:
+            print(f"Indexing batch {i} to {i + len(batch_df)} ({len(batch_texts)} new items)...")
+            vectorstore.add_texts(
+                texts=batch_texts,
+                metadatas=batch_metadatas,
+                ids=batch_ids
+            )
+            total_indexed += len(batch_texts)
+            chunks_processed += 1
+            
+            if test and chunks_processed >= 1:
+                print("Test mode enabled: stopping after 1 successfully processed chunk.")
+                break
+        except Exception as e:
+            print(f"Error indexing batch {i} to {i + len(batch_df)}: {e}")
+            total_errors += 1
+
+    return {
+        "indexed": total_indexed,
+        "skipped": total_skipped,
+        "batch_errors": total_errors,
+        "total_in_db": total_indexed + len(existing_ids)
+    }
 
 def search_db(query: str, k: int = 5) -> list[dict]:
     """

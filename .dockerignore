@@ -11,7 +11,8 @@ __pycache__/
 .Python
 
 # Data (large raw files — not needed at runtime)
-data/
+data/raw/
+data/chroma_db/
 
 # Notebooks
 notebooks/
