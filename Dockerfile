@@ -22,6 +22,7 @@ RUN pip install --no-cache-dir \
 # ---- Application code ----
 COPY backend/ ./backend/
 COPY models/  ./models/
+COPY data/  ./data/
 
 # ---- Runtime ----
 # Railway injects $PORT at runtime. Default to 8000 for local docker runs.

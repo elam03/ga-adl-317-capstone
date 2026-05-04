@@ -6,3 +6,9 @@ pandas
 scikit-learn==1.6.1
 numpy
 python-dotenv
+langchain
+langchain-openai
+langchain-community
+langchain-text-splitters
+langchain-chroma
+tiktoken
