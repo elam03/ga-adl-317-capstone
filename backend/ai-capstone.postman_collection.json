@@ -1,0 +1,379 @@
+{
+  "info": {
+    "_postman_id": "747c942f-8aa7-471e-b392-7364a2feefc3",
+    "name": "ai-capstone",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "6548994"
+  },
+  "item": [
+    {
+      "name": "predict @ localhost",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n           \"categories\": [\"Card Game\", \"Fantasy\"],\n           \"mechanics\": [\"Deck, Bag, and Pool Building\", \"Hand Management\"]\n         }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/predict",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "predict"
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST http://127.0.0.1:8000/predict \\\n     -H \"Content-Type: application/json\" \\\n     -d '{\n           \"categories\": [\"Card Game\", \"Fantasy\"],\n           \"mechanics\": [\"Deck, Bag, and Pool Building\", \"Hand Management\"]\n         }'"
+      },
+      "response": []
+    },
+    {
+      "name": "predict with auth @ localhost",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"categories\": [\"Strategy\"], \"mechanics\": [\"Hand Management\"]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8000/predict",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "predict"
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST http://localhost:8000/predict \\\n  -H \"Content-Type: application/json\" \\\n  -H \"X-API-Key: your_password\" \\\n  -d '{\"categories\": [\"Strategy\"], \"mechanics\": [\"Hand Management\"]}'"
+      },
+      "response": []
+    },
+    {
+      "name": "predict with auth @ railway",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"categories\": [\"Strategy\"], \"mechanics\": [\"Hand Management\"]}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://fastapi-endpoints-production-58a0.up.railway.app/predict",
+          "protocol": "https",
+          "host": [
+            "fastapi-endpoints-production-58a0",
+            "up",
+            "railway",
+            "app"
+          ],
+          "path": [
+            "predict"
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST http://localhost:8000/predict \\\n  -H \"Content-Type: application/json\" \\\n  -H \"X-API-Key: your_password\" \\\n  -d '{\"categories\": [\"Strategy\"], \"mechanics\": [\"Hand Management\"]}'"
+      },
+      "response": []
+    },
+    {
+      "name": "RAG prepare",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/rag/prepare",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "rag",
+            "prepare"
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST http://localhost:8000/rag/prepare \\\n     -H \"X-API-Key: your_password\"\n"
+      },
+      "response": []
+    },
+    {
+      "name": "RAG prepare @ railway",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "url": {
+          "raw": "https://fastapi-endpoints-production-58a0.up.railway.app/rag/prepare",
+          "protocol": "https",
+          "host": [
+            "fastapi-endpoints-production-58a0",
+            "up",
+            "railway",
+            "app"
+          ],
+          "path": [
+            "rag",
+            "prepare"
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST http://localhost:8000/rag/prepare \\\n     -H \"X-API-Key: your_password\"\n"
+      },
+      "response": []
+    },
+    {
+      "name": "RAG prepare (test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/rag/prepare?test=true",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "rag",
+            "prepare"
+          ],
+          "query": [
+            {
+              "key": "test",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST \"http://localhost:8000/rag/prepare?test=true\" \\\n  -H \"X-API-Key: your_password\""
+      },
+      "response": []
+    },
+    {
+      "name": "RAG prepare (test) @ railway",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "url": {
+          "raw": "https://fastapi-endpoints-production-58a0.up.railway.app/rag/prepare?test=true",
+          "protocol": "https",
+          "host": [
+            "fastapi-endpoints-production-58a0",
+            "up",
+            "railway",
+            "app"
+          ],
+          "path": [
+            "rag",
+            "prepare"
+          ],
+          "query": [
+            {
+              "key": "test",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "Generated from cURL: curl -X POST \"http://localhost:8000/rag/prepare?test=true\" \\\n  -H \"X-API-Key: your_password\""
+      },
+      "response": []
+    },
+    {
+      "name": "Search",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "type": "text",
+              "key": "query",
+              "value": "strategy games with trading"
+            },
+            {
+              "type": "text",
+              "key": "k",
+              "value": "3"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/rag/search?query=strategy games with trading&k=3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "rag",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "strategy games with trading"
+            },
+            {
+              "key": "k",
+              "value": "3"
+            }
+          ]
+        },
+        "description": "Generated from cURL: curl -G \"http://localhost:8000/rag/search\" \\\n  --data-urlencode \"query=strategy games with trading\" \\\n  --data-urlencode \"k=3\" \\\n  -H \"X-API-Key: your_password\""
+      },
+      "response": []
+    },
+    {
+      "name": "Search @ railway",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-API-Key",
+            "value": "your_password"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "type": "text",
+              "key": "query",
+              "value": "strategy games with trading"
+            },
+            {
+              "type": "text",
+              "key": "k",
+              "value": "3"
+            }
+          ]
+        },
+        "url": {
+          "raw": "https://fastapi-endpoints-production-58a0.up.railway.app/rag/search?query=strategy games with trading&k=3",
+          "protocol": "https",
+          "host": [
+            "fastapi-endpoints-production-58a0",
+            "up",
+            "railway",
+            "app"
+          ],
+          "path": [
+            "rag",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "strategy games with trading"
+            },
+            {
+              "key": "k",
+              "value": "3"
+            }
+          ]
+        },
+        "description": "Generated from cURL: curl -G \"http://localhost:8000/rag/search\" \\\n  --data-urlencode \"query=strategy games with trading\" \\\n  --data-urlencode \"k=3\" \\\n  -H \"X-API-Key: your_password\""
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
